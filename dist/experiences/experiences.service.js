@@ -1,0 +1,81 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ExperiencesService = void 0;
+const common_1 = require("@nestjs/common");
+const prisma_service_1 = require("../prisma/prisma.service");
+let ExperiencesService = class ExperiencesService {
+    prisma;
+    constructor(prisma) {
+        this.prisma = prisma;
+    }
+    async findAll() {
+        return this.prisma.experience.findMany({
+            orderBy: { sortOrder: 'desc' },
+        });
+    }
+    async findOne(id) {
+        const experience = await this.prisma.experience.findUnique({
+            where: { id },
+        });
+        if (!experience) {
+            throw new common_1.NotFoundException(`Experience with ID "${id}" not found`);
+        }
+        return experience;
+    }
+    async create(createExperienceDto) {
+        const maxSortOrder = await this.prisma.experience.findFirst({
+            orderBy: { sortOrder: 'desc' },
+            select: { sortOrder: true },
+        });
+        const sortOrder = createExperienceDto.sortOrder ?? (maxSortOrder?.sortOrder ?? 0) + 1;
+        return this.prisma.experience.create({
+            data: {
+                company: createExperienceDto.company,
+                role: createExperienceDto.role,
+                location: createExperienceDto.location,
+                startDate: new Date(createExperienceDto.startDate),
+                endDate: createExperienceDto.endDate ? new Date(createExperienceDto.endDate) : null,
+                isCurrent: createExperienceDto.isCurrent ?? false,
+                description: createExperienceDto.description,
+                achievements: createExperienceDto.achievements,
+                responsibilities: createExperienceDto.responsibilities,
+                technologies: createExperienceDto.technologies,
+                highlights: createExperienceDto.highlights,
+                sortOrder,
+            },
+        });
+    }
+    async update(id, updateExperienceDto) {
+        const updateData = { ...updateExperienceDto };
+        if (updateData.startDate) {
+            updateData.startDate = new Date(updateData.startDate);
+        }
+        if (updateData.endDate !== undefined) {
+            updateData.endDate = updateData.endDate ? new Date(updateData.endDate) : null;
+        }
+        return this.prisma.experience.update({
+            where: { id },
+            data: updateData,
+        });
+    }
+    async remove(id) {
+        return this.prisma.experience.delete({
+            where: { id },
+        });
+    }
+};
+exports.ExperiencesService = ExperiencesService;
+exports.ExperiencesService = ExperiencesService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+], ExperiencesService);
+//# sourceMappingURL=experiences.service.js.map
