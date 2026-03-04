@@ -41,14 +41,21 @@ model Skill {
 }
 
 model Experience {
-  id         Int       @id @default(autoincrement())
-  company    String
-  role       String
-  startDate  DateTime  @map("start_date")
-  endDate    DateTime? @map("end_date")
-  isCurrent  Boolean   @default(false) @map("is_current")
-  highlights String[]
-  sortOrder  Int       @map("sort_order")
+  id            Int       @id @default(autoincrement())
+  company       String
+  role          String
+  location      String
+  startDate     DateTime  @map("start_date")
+  endDate       DateTime? @map("end_date")
+  isCurrent     Boolean   @default(false) @map("is_current")
+  description   String
+  achievements  String[]
+  responsibilities String[]
+  technologies  String[]
+  highlights    String[]
+  sortOrder     Int       @map("sort_order")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
 
   @@map("experiences")
 }
@@ -58,14 +65,21 @@ model Project {
   slug          String   @unique
   title         String
   excerpt       String
+  description   String
   content       String?
+  category      String
   stack         String[]
   tags          String[]
+  technologies  String[]
+  features      String[]
+  challenges    String[]
+  solutions     String[]
   featured      Boolean  @default(false)
   coverImage    String?  @map("cover_image")
   galleryImages String[] @map("gallery_images")
   liveUrl       String?  @map("live_url")
   repoUrl       String?  @map("repo_url")
+  date          String?
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
 
@@ -80,6 +94,7 @@ model Post {
   contentMarkdown String    @map("content_markdown")
   status          String    @default("DRAFT")
   publishedAt     DateTime? @map("published_at")
+  readTime        String?   @map("read_time")
   coverImage      String?   @map("cover_image")
   tags            String[]
   seoTitle        String?   @map("seo_title")
