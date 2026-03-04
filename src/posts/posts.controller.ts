@@ -14,17 +14,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('api/posts')
 export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
-
-  @Get()
-  findAll() {
-    return this.postsService.findAll();
-  }
-
-  @Get(':slug')
-  findOne(@Param('slug') slug: string) {
-    return this.postsService.findOne(slug);
-  }
+  constructor(private readonly postsService: PostsService) { }
 
   @UseGuards(JwtAuthGuard)
   @Get('admin/all')
@@ -36,6 +26,16 @@ export class PostsController {
   @Get('admin/:slug')
   findOneAdmin(@Param('slug') slug: string) {
     return this.postsService.findOneAdmin(slug);
+  }
+
+  @Get()
+  findAll() {
+    return this.postsService.findAll();
+  }
+
+  @Get(':slug')
+  findOne(@Param('slug') slug: string) {
+    return this.postsService.findOne(slug);
   }
 
   @UseGuards(JwtAuthGuard)
