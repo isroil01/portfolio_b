@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         String   @default("ADMIN")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model SiteSettings {
+  id           Int    @id @default(1)
+  heroTitle    String @map("hero_title")
+  heroSubtitle String @map("hero_subtitle")
+  about        String
+  location     String
+  email        String
+  socials      Json
+  seoDefaults  Json   @map("seo_defaults")
+
+  @@map("site_settings")
+}
+
+model Skill {
+  id         Int    @id @default(autoincrement())
+  category   String
+  name       String
+  level      Int
+  sortOrder  Int    @map("sort_order")
+
+  @@map("skills")
+}
+
+model Experience {
+  id         Int       @id @default(autoincrement())
+  company    String
+  role       String
+  startDate  DateTime  @map("start_date")
+  endDate    DateTime? @map("end_date")
+  isCurrent  Boolean   @default(false) @map("is_current")
+  highlights String[]
+  sortOrder  Int       @map("sort_order")
+
+  @@map("experiences")
+}
+
+model Project {
+  id            Int      @id @default(autoincrement())
+  slug          String   @unique
+  title         String
+  excerpt       String
+  content       String?
+  stack         String[]
+  tags          String[]
+  featured      Boolean  @default(false)
+  coverImage    String?  @map("cover_image")
+  galleryImages String[] @map("gallery_images")
+  liveUrl       String?  @map("live_url")
+  repoUrl       String?  @map("repo_url")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("projects")
+}
+
+model Post {
+  id              Int       @id @default(autoincrement())
+  slug            String    @unique
+  title           String
+  excerpt         String
+  contentMarkdown String    @map("content_markdown")
+  status          String    @default("DRAFT")
+  publishedAt     DateTime? @map("published_at")
+  coverImage      String?   @map("cover_image")
+  tags            String[]
+  seoTitle        String?   @map("seo_title")
+  seoDescription  String?   @map("seo_description")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@map("posts")
+}
+
+model Media {
+  id        Int      @id @default(autoincrement())
+  filePath  String   @map("file_path")
+  fileName  String   @map("file_name")
+  mimeType  String   @map("mime_type")
+  size      Int
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("media")
+}
